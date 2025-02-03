@@ -1,6 +1,6 @@
 package com.market.agasale.service;
 
-import com.market.agasale.common.dto.DeleteConsumerReturn;
+import com.market.agasale.common.dto.DeleteConsumerDto;
 import com.market.agasale.common.dto.UpdateConsumerDto;
 import com.market.agasale.common.enums.HttpDefaultMessage;
 import com.market.agasale.exception.ConsumerNotFoundException;
@@ -51,12 +51,12 @@ public class ConsumerService {
         }
     }
 
-    public DeleteConsumerReturn deleteConsumer(long id) {
+    public DeleteConsumerDto deleteConsumer(long id) {
         Optional<Consumer> optionalConsumer = consumerRepo.findById(id);
 
         if (optionalConsumer.isPresent()) {
             consumerRepo.deleteById(id);
-            return new DeleteConsumerReturn(optionalConsumer.get().getId(),
+            return new DeleteConsumerDto(optionalConsumer.get().getId(),
                                             optionalConsumer.get().getName(),
                                             optionalConsumer.get().getEmail(),
                                             optionalConsumer.get().getPhoneNumber());

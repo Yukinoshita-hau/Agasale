@@ -1,6 +1,6 @@
 package com.market.agasale.service;
 
-import com.market.agasale.common.dto.DeleteSellerReturn;
+import com.market.agasale.common.dto.DeleteSellerDto;
 import com.market.agasale.common.dto.UpdateSellerDto;
 import com.market.agasale.common.enums.HttpDefaultMessage;
 import com.market.agasale.exception.SellerNotFoundException;
@@ -44,12 +44,12 @@ public class SellerService {
         }
     }
 
-    public DeleteSellerReturn deleteSeller(long id) {
+    public DeleteSellerDto deleteSeller(long id) {
         Optional<Seller> optionalSeller = sellerRepo.findById(id);
 
         if (optionalSeller.isPresent()) {
             sellerRepo.deleteById(id);
-            return new DeleteSellerReturn(optionalSeller.get().getId(), optionalSeller.get().getEmail());
+            return new DeleteSellerDto(optionalSeller.get().getId(), optionalSeller.get().getEmail());
         } else {
             throw new SellerNotFoundException(HttpDefaultMessage.HTTP_SELLER_NOT_FOUND_MESSAGE.getHttpSellerNotFoundMessageWithId(id));
         }

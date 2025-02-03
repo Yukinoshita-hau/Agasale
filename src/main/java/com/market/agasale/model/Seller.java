@@ -1,5 +1,6 @@
 package com.market.agasale.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -14,6 +15,7 @@ public class Seller {
     private String password;
 
     @OneToMany(mappedBy = "seller")
+    @JsonIgnoreProperties("seller")
     private List<Product> products;
 
     public long getId() {

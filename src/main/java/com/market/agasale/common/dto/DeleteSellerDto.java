@@ -1,10 +1,10 @@
 package com.market.agasale.common.dto;
 
-public class DeleteSellerReturn {
+public class DeleteSellerDto {
     private long id;
     private String email;
 
-    public DeleteSellerReturn(long id, String email) {
+    public DeleteSellerDto(long id, String email) {
         this.id = id;
         this.email = email;
     }

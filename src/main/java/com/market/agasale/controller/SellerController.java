@@ -1,6 +1,6 @@
 package com.market.agasale.controller;
 
-import com.market.agasale.common.dto.DeleteSellerReturn;
+import com.market.agasale.common.dto.DeleteSellerDto;
 import com.market.agasale.common.dto.UpdateSellerDto;
 import com.market.agasale.model.Seller;
 import com.market.agasale.service.SellerService;
@@ -30,7 +30,7 @@ public class SellerController {
     }
 
     @DeleteMapping("/seller/{id}")
-    public DeleteSellerReturn deleteSeller(@PathVariable long id) {
+    public DeleteSellerDto deleteSeller(@PathVariable long id) {
         return sellerService.deleteSeller(id);
     }
 }

@@ -7,14 +7,6 @@ public class UpdateConsumerDto {
     private String password;
     private String phoneNumber;
 
-    public UpdateConsumerDto(long id, String name, String email, String password, String phoneNumber) {
-        this.id = id;
-        this.name = name;
-        this.email = email;
-        this.password = password;
-        this.phoneNumber = phoneNumber;
-    }
-
     public String getName() {
         return name;
     }

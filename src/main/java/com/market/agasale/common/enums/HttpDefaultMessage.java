@@ -3,7 +3,9 @@ package com.market.agasale.common.enums;
 public enum HttpDefaultMessage {
     HTTP_CONSUMER_NOT_FOUND_MESSAGE("Пользователь не найден"),
     HTTP_SELLER_NOT_FOUND_MESSAGE("Продавец не найден"),
-    HTTP_CART_NOT_FOUND_MESSAGE("Корзина не найдена");
+    HTTP_CART_NOT_FOUND_MESSAGE("Корзина не найдена"),
+    HTTP_CARTITEM_NOT_FOUND_MESSAGE("Элемент корзины не найден"),
+    HTTP_PRODUCT_NOT_FOUND_MESSAGE("Товар не был найден");
 
     HttpDefaultMessage(String message) {
     }
@@ -14,5 +16,17 @@ public enum HttpDefaultMessage {
 
     public String getHttpSellerNotFoundMessageWithId(long id) {
         return "Продавец с ID " + id + " не найден";
+    }
+
+    public String getHttpCartNotFoundMessageWithId(long id) {
+        return "Корзина с ID " + id + " не найдена";
+    }
+
+    public String getHttpCartItemNotFoundMessageWithId(long id) {
+        return "Элемент корзины с ID " + id + " не найден";
+    }
+
+    public String getHttpProductNotFoundMessageWithId(long id) {
+        return "Товар с ID " + id + " не найден";
     }
 }

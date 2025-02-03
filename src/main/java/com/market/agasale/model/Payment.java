@@ -15,7 +15,7 @@ public class Payment {
     @ManyToOne
     private Order order;
 
-    private BigDecimal amount; // Сумма платежа
+    private BigDecimal amount;
     private String paymentMethod;
 
     @Enumerated(EnumType.STRING)

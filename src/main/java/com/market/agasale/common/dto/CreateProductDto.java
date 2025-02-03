@@ -1,30 +1,14 @@
-package com.market.agasale.model;
-
-import jakarta.persistence.*;
+package com.market.agasale.common.dto;
 
 import java.math.BigDecimal;
 
-@Entity
-public class Product {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
-
+public class CreateProductDto {
     private String name;
     private String description;
     private BigDecimal price;
     private int stockQuantity;
 
-    @ManyToOne
-    private Seller seller;
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
+    private long sellerId;
 
     public String getName() {
         return name;
@@ -58,11 +42,11 @@ public class Product {
         this.stockQuantity = stockQuantity;
     }
 
-    public Seller getSeller() {
-        return seller;
+    public long getSellerId() {
+        return sellerId;
     }
 
-    public void setSeller(Seller seller) {
-        this.seller = seller;
+    public void setSellerId(long sellerId) {
+        this.sellerId = sellerId;
     }
 }

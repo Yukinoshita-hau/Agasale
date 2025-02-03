@@ -1,5 +1,7 @@
 package com.market.agasale.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 @Entity
@@ -13,7 +15,8 @@ public class Consumer {
     private String password;
     private String phoneNumber;
 
-    @OneToOne(mappedBy = "consumer")
+    @OneToOne(mappedBy = "consumer", cascade = CascadeType.ALL)
+    @JsonIgnoreProperties("consumer")
     private Cart cart;
 
     public String getEmail() {
