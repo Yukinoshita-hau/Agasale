@@ -78,6 +78,7 @@ public class CartItemService {
 
         if (optionalCartItem.isPresent()) {
             cartItemRepo.deleteById(id);
+
             return new DeleteCartItemDto(optionalCartItem.get().getId(),
                                                                optionalCartItem.get().getQuantity());
         } else {

@@ -39,4 +39,16 @@ public class GlobalExceptionHandler {
         JsonErrorResponse errorResponse = new JsonErrorResponse(e.getMessage(), HttpStatus.NOT_FOUND.value());
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(OrderNotFoundException.class)
+    public ResponseEntity<JsonErrorResponse> handlerOrderNotFound(OrderNotFoundException e) {
+        JsonErrorResponse errorResponse = new JsonErrorResponse(e.getMessage(), HttpStatus.NOT_FOUND.value());
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(OrderItemNotFoundException.class)
+    public ResponseEntity<JsonErrorResponse> handlerOrderItemNotFound(OrderItemNotFoundException e) {
+        JsonErrorResponse errorResponse = new JsonErrorResponse(e.getMessage(), HttpStatus.NOT_FOUND.value());
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    }
 }
