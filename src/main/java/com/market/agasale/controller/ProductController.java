@@ -6,7 +6,9 @@ import com.market.agasale.service.ProductService;
 import com.market.agasale.common.dto.CreateProductDto;
 import com.market.agasale.common.dto.UpdateProductDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/")
@@ -33,5 +35,15 @@ public class ProductController {
     @DeleteMapping("/product/{id}")
     public DeleteProductDto deleteProduct(@PathVariable long id) {
         return productService.deleteProduct(id);
+    }
+
+    @PostMapping("/product/{id}/uploadImage")
+    public Product uploadImage(@RequestParam MultipartFile file, @PathVariable long id) {
+        return productService.uploadImage(file, id);
+    }
+
+    @GetMapping("/product/getImage/{fileName}")
+    public ResponseEntity<byte[]> getImage(@PathVariable String fileName) {
+        return productService.getImage(fileName);
     }
 }

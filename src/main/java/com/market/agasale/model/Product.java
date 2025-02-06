@@ -3,6 +3,7 @@ package com.market.agasale.model;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Entity
 public class Product {
@@ -14,9 +15,18 @@ public class Product {
     private String description;
     private BigDecimal price;
     private int stockQuantity;
+    private List<String> images;
 
     @ManyToOne
     private Seller seller;
+
+    public List<String> getImages() {
+        return images;
+    }
+
+    public void setImages(List<String> images) {
+        this.images = images;
+    }
 
     public long getId() {
         return id;
