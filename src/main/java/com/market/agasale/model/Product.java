@@ -20,6 +20,9 @@ public class Product {
     @ManyToOne
     private Seller seller;
 
+    @ManyToOne
+    private Category category;
+
     public List<String> getImages() {
         return images;
     }
@@ -74,5 +77,13 @@ public class Product {
 
     public void setSeller(Seller seller) {
         this.seller = seller;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
     }
 }

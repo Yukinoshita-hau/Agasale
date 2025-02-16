@@ -43,7 +43,8 @@ public class Consumer {
         this.phoneNumber = phoneNumber;
     }
 
-    public Cart getCart() {
+    public
+    Cart getCart() {
         return cart;
     }
 
