@@ -10,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/")
 public class ProductController {
@@ -45,5 +47,10 @@ public class ProductController {
     @GetMapping("/product/getImage/{fileName}")
     public ResponseEntity<byte[]> getImage(@PathVariable String fileName) {
         return productService.getImage(fileName);
+    }
+
+    @PostMapping("/product/searchProduct")
+    public List<Product> searchProduct(@RequestParam String name) {
+        return productService.searchProduct(name);
     }
 }
