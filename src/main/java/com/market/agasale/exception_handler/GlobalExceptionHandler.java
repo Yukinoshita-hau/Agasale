@@ -51,10 +51,4 @@ public class GlobalExceptionHandler {
         JsonErrorResponse errorResponse = new JsonErrorResponse(e.getMessage(), HttpStatus.NOT_FOUND.value());
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
-
-    @ExceptionHandler(CategoryNotFoundException.class)
-    public ResponseEntity<JsonErrorResponse> handlerCategoryNotFound(CategoryNotFoundException e) {
-        JsonErrorResponse errorResponse = new JsonErrorResponse(e.getMessage(), HttpStatus.NOT_FOUND.value());
-        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
-    }
 }

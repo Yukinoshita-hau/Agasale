@@ -1,13 +1,11 @@
 package com.market.agasale.service;
 
-import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import com.market.agasale.common.Minio;
 import com.market.agasale.common.dto.CreateProductDto;
 import com.market.agasale.common.dto.DeleteProductDto;
 import com.market.agasale.common.dto.UpdateProductDto;
 import com.market.agasale.common.elasticsearch.ElasticClientConfig;
 import com.market.agasale.common.elasticsearch.model.ElasticProduct;
-import com.market.agasale.common.enums.Categories;
 import com.market.agasale.common.enums.HttpDefaultMessage;
 import com.market.agasale.exception.ProductNotFoundException;
 import com.market.agasale.exception.SellerNotFoundException;
@@ -23,7 +21,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -64,7 +61,7 @@ public class ProductService {
             product.setPrice(productDto.getPrice());
             product.setStockQuantity(productDto.getStockQuantity());
             product.setSeller(optionalSeller.get());
-            product.setCategory(productDto.getCategories());
+            product.setCategory(productDto.getCategory());
 
             Product existProduct = productRepo.save(product);
 
@@ -160,7 +157,12 @@ public class ProductService {
     }
 
     public List<Product> searchProduct(String searchTerm) {
-        List<ElasticProduct> elasticproducts = elasticClientConfig.searchProductsByQuery(searchTerm);
+        List<ElasticProduct> elasticproducts = null;
+        try {
+            elasticproducts = elasticClientConfig.searchProductsByQuery(searchTerm);
+        } catch (IOException e) {
+            throw new ProductNotFoundException(HttpDefaultMessage.HTTP_PRODUCT_NOT_FOUND_MESSAGE.name());
+        }
 
         if (elasticproducts == null) {
             return null;

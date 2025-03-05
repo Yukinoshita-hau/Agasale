@@ -1,6 +1,6 @@
 package com.market.agasale.model;
 
-import com.market.agasale.common.enums.Categories;
+import com.market.agasale.common.enums.Category;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -26,13 +26,13 @@ public class Product {
     @ManyToOne
     private Seller seller;
 
-    @ElementCollection(targetClass = Categories.class)
+    @ElementCollection(targetClass = Category.class)
     @CollectionTable(
             name = "product_categories",
             joinColumns = @JoinColumn(name = "product_id")
     )
     @Enumerated(EnumType.STRING)
-    private List<Categories> category;
+    private List<Category> category;
 
 
 }
