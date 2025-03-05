@@ -1,9 +1,13 @@
 package com.market.agasale.service;
 
+import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import com.market.agasale.common.Minio;
 import com.market.agasale.common.dto.CreateProductDto;
 import com.market.agasale.common.dto.DeleteProductDto;
 import com.market.agasale.common.dto.UpdateProductDto;
+import com.market.agasale.common.elasticsearch.ElasticClientConfig;
+import com.market.agasale.common.elasticsearch.model.ElasticProduct;
+import com.market.agasale.common.enums.Categories;
 import com.market.agasale.common.enums.HttpDefaultMessage;
 import com.market.agasale.exception.ProductNotFoundException;
 import com.market.agasale.exception.SellerNotFoundException;
@@ -12,18 +16,15 @@ import com.market.agasale.model.Seller;
 import com.market.agasale.repo.ProductRepo;
 import com.market.agasale.repo.SellerRepo;
 import io.minio.GetObjectResponse;
-import io.minio.MinioClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +41,9 @@ public class ProductService {
 
     @Autowired
     private Minio minio;
+
+    @Autowired
+    private ElasticClientConfig elasticClientConfig;
 
     public Product getProduct(long id) {
         Optional<Product> optionalProduct = productRepo.findById(id);
@@ -60,8 +64,22 @@ public class ProductService {
             product.setPrice(productDto.getPrice());
             product.setStockQuantity(productDto.getStockQuantity());
             product.setSeller(optionalSeller.get());
+            product.setCategory(productDto.getCategories());
 
-            return productRepo.save(product);
+            Product existProduct = productRepo.save(product);
+
+            ElasticProduct elasticProduct = new ElasticProduct();
+            elasticProduct.setId(String.valueOf(existProduct.getId()));
+            elasticProduct.setName(existProduct.getName());
+            elasticProduct.setDescription(existProduct.getDescription());
+            elasticProduct.setPrice(existProduct.getPrice());
+            elasticProduct.setCategory(existProduct.getCategory());
+            try {
+                elasticClientConfig.createDocument(elasticProduct);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            return existProduct;
         } else {
             throw new SellerNotFoundException(HttpDefaultMessage.HTTP_SELLER_NOT_FOUND_MESSAGE.getHttpSellerNotFoundMessageWithId(productDto.getSellerId()));
         }
@@ -138,6 +156,27 @@ public class ProductService {
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    public List<Product> searchProduct(String searchTerm) {
+        List<ElasticProduct> elasticproducts = elasticClientConfig.searchProductsByQuery(searchTerm);
+
+        if (elasticproducts == null) {
+            return null;
+        } else {
+            List<Product> products = new ArrayList<>();
+            for (ElasticProduct elasticProduct : elasticproducts) {
+                Optional<Product> optionalProduct = productRepo.findById(Long.valueOf(elasticProduct.getId()));
+                if (optionalProduct.isPresent()) {
+                    products.add(optionalProduct.get());
+                }
+            }
+            if (products.size() > 0) {
+                return products;
+            } else {
+                throw new ProductNotFoundException(HttpDefaultMessage.HTTP_PRODUCT_NOT_FOUND_MESSAGE.toString());
+            }
         }
     }
 }
