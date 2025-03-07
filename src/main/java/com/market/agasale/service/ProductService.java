@@ -3,6 +3,7 @@ package com.market.agasale.service;
 import com.market.agasale.common.Minio;
 import com.market.agasale.common.dto.CreateProductDto;
 import com.market.agasale.common.dto.DeleteProductDto;
+import com.market.agasale.common.dto.SearchDto;
 import com.market.agasale.common.dto.UpdateProductDto;
 import com.market.agasale.common.elasticsearch.ElasticClientConfig;
 import com.market.agasale.common.elasticsearch.model.ElasticProduct;
@@ -153,9 +154,8 @@ public class ProductService {
 
         try {
             GetObjectResponse objectResponse = minio.getObject(bucketName, fileName);
-            InputStream inputStream = objectResponse;
 
-            byte[] imageBytes = inputStream.readAllBytes();
+            byte[] imageBytes = objectResponse.readAllBytes();
 
             HttpHeaders headers = new HttpHeaders();
             headers.set(HttpHeaders.CONTENT_TYPE, objectResponse.headers().get("Content-Type"));
@@ -169,9 +169,35 @@ public class ProductService {
     }
 
     public List<Product> searchProduct(String searchTerm) {
-        List<ElasticProduct> elasticproducts = null;
+        List<ElasticProduct> elasticproducts;
         try {
             elasticproducts = elasticClientConfig.searchProductsByQuery(searchTerm);
+        } catch (IOException e) {
+            throw new ProductNotFoundException(HttpDefaultMessage.HTTP_PRODUCT_NOT_FOUND_MESSAGE.name());
+        }
+
+        if (elasticproducts == null) {
+            return null;
+        } else {
+            List<Product> products = new ArrayList<>();
+            for (ElasticProduct elasticProduct : elasticproducts) {
+                Optional<Product> optionalProduct = productRepo.findById(Long.valueOf(elasticProduct.getId()));
+                if (optionalProduct.isPresent()) {
+                    products.add(optionalProduct.get());
+                }
+            }
+            if (products.size() > 0) {
+                return products;
+            } else {
+                throw new ProductNotFoundException(HttpDefaultMessage.HTTP_PRODUCT_NOT_FOUND_MESSAGE.toString());
+            }
+        }
+    }
+
+    public List<Product> searchProduct(SearchDto searchDto) {
+        List<ElasticProduct> elasticproducts;
+        try {
+            elasticproducts = elasticClientConfig.searchProductsByQuery(searchDto.getName(), searchDto.getCategories());
         } catch (IOException e) {
             throw new ProductNotFoundException(HttpDefaultMessage.HTTP_PRODUCT_NOT_FOUND_MESSAGE.name());
         }

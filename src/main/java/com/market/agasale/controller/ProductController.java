@@ -1,6 +1,7 @@
 package com.market.agasale.controller;
 
 import com.market.agasale.common.dto.DeleteProductDto;
+import com.market.agasale.common.dto.SearchDto;
 import com.market.agasale.model.Product;
 import com.market.agasale.service.ProductService;
 import com.market.agasale.common.dto.CreateProductDto;
@@ -54,8 +55,13 @@ public class ProductController {
         return productService.getImage(fileName);
     }
 
-    @PostMapping("/product/searchProduct")
+    @GetMapping("/product/searchProduct")
     public List<Product> searchProduct(@RequestParam String name) {
         return productService.searchProduct(name);
+    }
+
+    @PostMapping("/product/searchProduct")
+    public List<Product> searchProduct(@RequestBody SearchDto searchDto) {
+        return productService.searchProduct(searchDto);
     }
 }
