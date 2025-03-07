@@ -32,7 +32,7 @@ public class Product {
             joinColumns = @JoinColumn(name = "product_id")
     )
     @Enumerated(EnumType.STRING)
-    private List<Category> category;
+    private List<Category> categories;
 
 
 }

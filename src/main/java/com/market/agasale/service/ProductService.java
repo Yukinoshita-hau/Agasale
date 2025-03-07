@@ -61,7 +61,7 @@ public class ProductService {
             product.setPrice(productDto.getPrice());
             product.setStockQuantity(productDto.getStockQuantity());
             product.setSeller(optionalSeller.get());
-            product.setCategory(productDto.getCategory());
+            product.setCategories(productDto.getCategories());
 
             Product existProduct = productRepo.save(product);
 
@@ -70,7 +70,7 @@ public class ProductService {
             elasticProduct.setName(existProduct.getName());
             elasticProduct.setDescription(existProduct.getDescription());
             elasticProduct.setPrice(existProduct.getPrice());
-            elasticProduct.setCategory(existProduct.getCategory());
+            elasticProduct.setCategory(existProduct.getCategories());
             try {
                 elasticClientConfig.createDocument(elasticProduct);
             } catch (IOException e) {
@@ -82,6 +82,16 @@ public class ProductService {
         }
     }
 
+    public List<Product> createManyProduct(List<CreateProductDto> createProductDtoList) {
+        List<Product> result = new ArrayList<>();
+        for (int i = 0; i < createProductDtoList.size(); i++) {
+            Product product = createProduct(createProductDtoList.get(i));
+            result.add(product);
+        }
+
+        return result;
+    }
+
     public Product updateProduct(UpdateProductDto productDto) {
         Optional<Product> optionalProduct = productRepo.findById(productDto.getId());
 
@@ -91,6 +101,7 @@ public class ProductService {
             existedProduct.setDescription(productDto.getDescription());
             existedProduct.setPrice(productDto.getPrice());
             existedProduct.setStockQuantity(productDto.getStockQuantity());
+            existedProduct.setCategories(productDto.getCategories());
 
             return productRepo.save(existedProduct);
         } else {
@@ -106,7 +117,8 @@ public class ProductService {
                                         optionalProduct.get().getName(),
                                         optionalProduct.get().getPrice(),
                                         optionalProduct.get().getStockQuantity(),
-                                        optionalProduct.get().getDescription());
+                                        optionalProduct.get().getDescription(),
+                                        optionalProduct.get().getCategories());
         } else {
             throw new ProductNotFoundException(HttpDefaultMessage.HTTP_PRODUCT_NOT_FOUND_MESSAGE.getHttpProductNotFoundMessageWithId(id));
         }

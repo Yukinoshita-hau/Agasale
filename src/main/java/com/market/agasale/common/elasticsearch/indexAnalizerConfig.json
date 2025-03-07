@@ -143,7 +143,7 @@
         "type": "scaled_float",
         "scaling_factor": 100
       },
-      "category": {
+      "categories": {
         "type": "keyword"
       }
     }

@@ -16,6 +16,6 @@ public class CreateProductDto {
     private int stockQuantity;
 
     private long sellerId;
-    private List<Category> category;
+    private List<Category> categories;
 
 }

@@ -29,6 +29,11 @@ public class ProductController {
         return productService.createProduct(productDto);
     }
 
+    @PostMapping("/products")
+    public List<Product> createManyProducts(@RequestBody List<CreateProductDto> productDtos) {
+        return productService.createManyProduct(productDtos);
+    }
+
     @PutMapping("/product")
     public Product updateProduct(@RequestBody UpdateProductDto productDto) {
         return productService.updateProduct(productDto);
